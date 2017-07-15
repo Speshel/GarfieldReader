@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Garfield Reader</string>
+    <string name="change_date">Change Date</string>
+    <string name="comic_description">Comic image</string>
+    <string name="fetch_random">Fetch Random</string>
+</resources>
