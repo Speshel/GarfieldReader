@@ -12,19 +12,27 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     ImageView imgComic;
 
+    ProgressBar imageLoadPercent;
+
     Calendar minDate = Calendar.getInstance();
+    Calendar maxDate = Calendar.getInstance();
+    Calendar currentComicDate = Calendar.getInstance();
     int screenWidth;
 
     @Override
@@ -32,52 +40,69 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize the progressbar
+        imageLoadPercent = (ProgressBar) findViewById(R.id.progressBar);
+
         // Register onTouch event
         Point size = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(size);
         screenWidth = size.x;
 
-        // Minimum month is June (6) - 1 because it uses 0th notation
+        // The minimum date for viewing comics is June 19th.
         minDate.set(1978, 6-1, 19);
+        maxDate.setTime(Calendar.getInstance().getTime());
 
+        // Initialize the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Initialize the ImageView to display comics and set an onTouchListener to detect when a user wants to navigate to a previous/next comic.
         imgComic = (ImageView) findViewById(R.id.imgComic);
         imgComic.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getX() < screenWidth/2) {
-                    Log.d("SCREEN_SIDE", event.getX() + "/" + screenWidth + "Left side tapped");
-                    return true;
-                } else if (event.getX() >= screenWidth/2) {
-                    Log.d("SCREEN_SIDE", event.getX() + "/" + screenWidth+ "Right side tapped");
-                    return true;
-                } else {
-                    return false;
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (event.getX() < screenWidth / 2) {
+                        currentComicDate.add(Calendar.DATE, -1);
+                        loadComic();
+                    }
+                    else if (event.getX() >= screenWidth / 2) {
+                        currentComicDate.add(Calendar.DATE, 1);
+                        loadComic();
+                    }
                 }
+                return false;
             }
         });
+        loadComic();
+    }
 
-        /*
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().hide();
+    private void loadComic() {
+        if(imageLoadPercent.getVisibility() == View.GONE) {
+            imageLoadPercent.setVisibility(View.VISIBLE);
         }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = formatter.format(currentComicDate.getTime());
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            View decorView = getWindow().getDecorView();
-            // Hide both the navigation bar and the status bar.
-            // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-            // a general rule, you should design your app to hide the status bar whenever you
-            // hide the navigation bar.
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
-        */
-
+        Log.d("onCreate", "Loading comic from date: " + formattedDate);
         Glide.with(this)
-                .load("https://d1ejxu6vysztl5.cloudfront.net/comics/garfield/2017/2017-07-12.gif")
+                .load("https://d1ejxu6vysztl5.cloudfront.net/comics/garfield/" + currentComicDate.get(Calendar.YEAR) + "/" + formattedDate + ".gif")
+                .error(R.drawable.ic_error_black_24dp)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        // log exception
+                        Log.e("TAG", "Error loading image", e);
+                        imageLoadPercent.setVisibility(View.GONE);
+                        return false; // important to return false so the error placeholder can be placed
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        imageLoadPercent.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
                 .into(imgComic);
     }
 
@@ -94,25 +119,16 @@ public class MainActivity extends AppCompatActivity {
                 openDatePicker();
                 return true;
             case R.id.icRandom:
-                displayRandomComic();
+                Toast.makeText(this, "In Development", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void displayRandomComic() {
-        long UPPER_RANGE = System.currentTimeMillis() / 1000;
-        long LOWER_RANGE = minDate.getTimeInMillis();
-        Random rand = new Random();
-        long unixRandomDate = LOWER_RANGE +
-                (long)(rand.nextDouble()*(UPPER_RANGE - LOWER_RANGE));
-        Log.d("displayRandomComic", UPPER_RANGE + "-" + LOWER_RANGE + "---------Timestamp: " + unixRandomDate);
-    }
-
     private void openDatePicker() {
         // Get Current Date
-        final Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
         int mYear = c.get(Calendar.YEAR);
         int mMonth = c.get(Calendar.MONTH);
         int mDay = c.get(Calendar.DAY_OF_MONTH);
@@ -121,14 +137,8 @@ public class MainActivity extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(year, monthOfYear, dayOfMonth);
-                        String comicDate = formatter.format(cal.getTime());
-                        Log.d("OnDateSet", "https://d1ejxu6vysztl5.cloudfront.net/comics/garfield/" + year + "/" + comicDate + ".gif");
-                        Glide.with(MainActivity.this)
-                                .load("https://d1ejxu6vysztl5.cloudfront.net/comics/garfield/" + year + "/" + comicDate + ".gif")
-                                .into(imgComic);
+                        currentComicDate.set(year, monthOfYear, dayOfMonth);
+                        loadComic();
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
