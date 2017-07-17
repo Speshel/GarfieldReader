@@ -74,7 +74,13 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        loadComic();
+        if(savedInstanceState != null) {
+            Calendar comicDate = (Calendar) savedInstanceState.getSerializable("comicDate");
+            currentComicDate = comicDate;
+            loadComic();
+        } else {
+            loadComic();
+        }
     }
 
     private void loadComic() {
@@ -145,4 +151,12 @@ public class MainActivity extends AppCompatActivity {
         datePickerDialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
         datePickerDialog.show();
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("comicDate", currentComicDate);
+        super.onSaveInstanceState(outState);
+    }
+
+
 }
