@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.icDate:
+                ComicFragment comicFragment = (ComicFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                comicFragment.showDatePicker();
                 return true;
             case R.id.icRandom:
                 Toast.makeText(this, "In Development", Toast.LENGTH_SHORT).show();

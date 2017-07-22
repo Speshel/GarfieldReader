@@ -1,5 +1,7 @@
 package me.loganfuller.garfieldreader;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.widget.ImageButton;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -22,8 +25,6 @@ public class ComicFragment extends Fragment {
     SimpleDateFormat formatter;
 
     Calendar currentComicDate = Calendar.getInstance();
-    Calendar minDate = Calendar.getInstance();
-    Calendar maxDate = Calendar.getInstance();
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -58,10 +59,6 @@ public class ComicFragment extends Fragment {
             }
         });
 
-        // The minimum date for viewing comics is June 19th.
-        minDate.set(1978, 6-1, 19);
-        maxDate.setTime(Calendar.getInstance().getTime());
-
         return rootView;
     }
 
@@ -78,5 +75,26 @@ public class ComicFragment extends Fragment {
         Log.d("comicFragment/loadComic", "Loading comic from date: " + formattedDate);
         Uri uri = Uri.parse("https://d1ejxu6vysztl5.cloudfront.net/comics/garfield/" + currentComicDate.get(Calendar.YEAR) + "/" + formattedDate + ".gif");
         comicView.setImageURI(uri);
+    }
+
+    public void showDatePicker() {
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setTargetFragment(ComicFragment.this, 1);
+        datePickerFragment.show(getFragmentManager(), "DatePicker");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        formatter = new SimpleDateFormat("yyyy-MM-dd");
+        if(resultCode == Activity.RESULT_OK) {
+            Bundle bundle = data.getExtras();
+            try {
+                currentComicDate.setTime(formatter.parse(bundle.getString("selectedDate", "error")));
+                Log.d("onActivityResult", "Received " + currentComicDate.getTime() + " from DatePickerDialog.");
+                loadComic();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
