@@ -3,4 +3,8 @@
     <string name="change_date">Change Date</string>
     <string name="comic_description">Comic image</string>
     <string name="fetch_random">Fetch Random</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="next_comic_button">Next Comic Button</string>
+    <string name="previous_comic_inspection">Previous Comic Inspection</string>
 </resources>

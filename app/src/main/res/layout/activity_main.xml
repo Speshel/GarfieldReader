@@ -15,22 +15,10 @@
         android:background="?attr/colorPrimary">
     </android.support.v7.widget.Toolbar>
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:name="me.loganfuller.garfieldreader.ComicFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/imgComic"
-            android:contentDescription="@string/comic_description" />
-
-    </RelativeLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>
