@@ -1,46 +1,72 @@
-<RelativeLayout android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
-    <ProgressBar
-        android:id="@+id/progressLoading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <com.facebook.drawee.view.SimpleDraweeView
-        fresco:actualImageScaleType="fitCenter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/imgComic"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:contentDescription="@string/comic_description"
-        android:layout_above="@+id/btnPreviousComic" />
+        fresco:actualImageScaleType="fitCenter"
+        fresco:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        fresco:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/btnPreviousComic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/ic_arrow_back_black_24dp"
-        android:minHeight="60dp"
-        android:minWidth="60dp"
-        android:contentDescription="@string/previous_comic_inspection" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        fresco:layout_constraintBottom_toBottomOf="parent">
 
-    <ImageButton
-        android:id="@+id/btnNextComic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/ic_arrow_forward_black_24dp"
-        android:minHeight="60dp"
-        android:minWidth="60dp"
-        android:contentDescription="@string/next_comic_button" />
+        <ImageButton
+            android:id="@+id/btnPreviousComic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_arrow_back_black_24dp"
+            android:contentDescription="@string/previous_comic_inspection"
+            android:minWidth="60dp"
+            android:minHeight="60dp"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            fresco:layout_constraintStart_toStartOf="parent"
+            fresco:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/today"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            fresco:layout_constraintEnd_toEndOf="parent"
+            fresco:layout_constraintStart_toStartOf="parent"
+            fresco:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnNextComic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_arrow_forward_black_24dp"
+            android:contentDescription="@string/next_comic_button"
+            android:minWidth="60dp"
+            android:minHeight="60dp"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            fresco:layout_constraintEnd_toEndOf="parent"
+            fresco:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
