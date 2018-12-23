@@ -4,6 +4,7 @@
     <string name="comic_description">Comic image</string>
     <string name="fetch_random">Fetch Random</string>
     <string name="today">Today</string>
+    <string name="action_licenses">Licenses</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="next_comic_button">Next Comic Button</string>

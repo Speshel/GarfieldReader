@@ -7,9 +7,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
-import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Initialize the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
@@ -48,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.icRandom:
                 Toast.makeText(this, "In Development", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_licenses:
+                new LibsBuilder()
+                        //provide a style (optional) (LIGHT, DARK, LIGHT_DARK_TOOLBAR)
+                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        //start the activity
+                        .start(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

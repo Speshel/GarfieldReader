@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +29,7 @@ public class ComicFragment extends Fragment {
 
     ImageButton btnNextComic, btnPreviousComic;
     Button btnToday;
-    SimpleDraweeView comicView;
+    PhotoView comicView;
 
     SimpleDateFormat formatter;
 
@@ -53,8 +55,6 @@ public class ComicFragment extends Fragment {
         btnToday = rootView.findViewById(R.id.btnToday);
 
         comicView = rootView.findViewById(R.id.imgComic);
-        comicView.getHierarchy().setFailureImage(R.drawable.ic_refresh_black_24dp);
-        comicView.getHierarchy().setProgressBarImage(new ProgressBarDrawable());
 
         formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -101,7 +101,7 @@ public class ComicFragment extends Fragment {
 
         Log.d("comicFragment/loadComic", "Loading comic from date: " + formattedDate);
         Uri uri = Uri.parse("https://d1ejxu6vysztl5.cloudfront.net/comics/garfield/" + calendar.get(Calendar.YEAR) + "/" + formattedDate + ".gif");
-        comicView.setImageURI(uri);
+        Picasso.get().load(uri).into(comicView);
     }
 
     public void showDatePicker() {
